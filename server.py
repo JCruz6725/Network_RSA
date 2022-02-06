@@ -18,17 +18,14 @@ server_public_key = {'public_key':keys['public_key'], 'n':keys['n']}
 server_private_key =  {'private_key':keys['private_key'], 'n':keys['n']}
 
 
-data = str( server_public_key['public_key']  ) + ',' + str(server_public_key['n']) + ','
-print (data)
+#data = str( server_public_key['public_key']  ) + ',' + str(server_public_key['n']) + ','
+#print (data)
 
 
 HOST = '127.0.0.1'
 PORT = 27000
 user = 'john'
 password = '123'
-
-#for i in range (20):
-#    password = md5_hasher(password)
 
 print ('*** SERVER ***')
 
@@ -40,8 +37,8 @@ conn, addr = s.accept()
 print('Connected by', addr)
 
 
-conn.send(str(data).encode())
-
+#conn.send(str(data).encode())
+data = conn.recv(1024).decode()
 
 
 

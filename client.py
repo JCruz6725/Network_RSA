@@ -24,10 +24,12 @@ PORT = 27000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
-data = s.recv(256).decode()
+s.send(client_public_key.encode())
 
-server_keys = to_int_array(format_data_to_int_array(data))
-server_keys = {'public_key':server_keys[0], 'n':server_keys[1]}
+#data = s.recv(256).decode()
+
+#server_keys = to_int_array(format_data_to_int_array(data))
+#server_keys = {'public_key':server_keys[0], 'n':server_keys[1]}
 
 
 def client_chat_state():
