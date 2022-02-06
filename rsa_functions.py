@@ -1,22 +1,22 @@
 import random
 from string_functions import *
 import json
-random.seed(20)
+#random.seed(20)
 
 class RSA():
-    def __init__ (self, upper = 2**8, lower = 0):
+    def __init__ (self, upper = 2**256, lower = 0):
         self.__lower = lower
         self.__upper = upper
-        self.keys = self.__set_keys(self.__lower, self.__upper)
-        #self.__p
-        #self.__q
-        #self.__n
-        #self.__tot
-    
+        self.__keys = self.__set_keys(self.__lower, self.__upper)
     
     def __random_int(self, lower_limit, upper_limit):
         r = random.randint(lower_limit, upper_limit)
         return r
+
+
+    #################################################
+    # math functions to get public and private keys #
+    #################################################
 
     def __mod_exponentiation(self, char_val, key, tot_n):
         remainder = (char_val**key)%(tot_n)
@@ -72,7 +72,14 @@ class RSA():
         from math import gcd
         if (gcd(a,b) == 1):
             return True
-
+        
+        
+        
+        
+    ##########################
+    # get/set keys functions #
+    ##########################     
+        
         
     def __set_keys(self, lower, upper):
         
@@ -91,17 +98,26 @@ class RSA():
 
         keys = {'public_key': public_key,
                 'private_key': private_key,
-                'totient_n': tot_n,
+                #'totient_n': tot_n,
                 'n': n
                 }
 
         return keys
 
 
+    def get_keys(self):
+        return self.__keys
+
+
+    #############################
+    # encrypt/decrypt functions #
+    #############################
+
+
     def encrypt(self, plain_text):
-        public_key = self.keys['public_key']
+        public_key = self.__keys['private_key']
         #tot_n = keys['totient_n']
-        n = self.keys['n']
+        n = self.__keys['n']
 
         plain_text_int = string_to_int_array(plain_text)
         cypher_text_int = []
@@ -117,7 +133,7 @@ class RSA():
 
     def decrypt(self, cypher_text_json, keys):
 
-        private_key = keys['private_key']
+        private_key = keys['public_key']
         #tot_n = keys['totient_n']
         n = keys['n']
 
@@ -144,57 +160,13 @@ class RSA():
             string += (chr(char))
 
         return string
-    '''
-    def format_data_to_int_array(data):
-        temp = ''
-        int_array = []
-        #print(s)
-        for char in data:
-            #print (char)
-            if (char != ','):
-                temp += char
-            else:
-              int_array.append(temp)
-              temp = ''
-
-        return int_array
-
-
-    def to_int_array (string_array):
-        num = [int(num, base=10) for num in string_array]
-        return num
-
-
-    def data_to_json(data):
-        in_data = {'data':data}
-        json_data = json.dumps(in_data)
-        return json_data
-
-
-    def string_to_int_array(string_text):
-        int_array = []
-        for char in string_text:   
-            int_array.append(ord(char))
-
-        return int_array
-
-    '''
-
-
-    
 
 
 
+#enc = RSA()
+#print (enc.get_keys())
+#string_t = 'hello'
+#cypher = enc.encrypt(string_t)
+#print (cypher)
 
-
-
-enc = RSA()
-print (enc.keys)
-string_t = 'hello'
-cypher = enc.encrypt(string_t)
-print (cypher)
-
-
-
-
-print(enc.decrypt(cypher, enc.keys))
+#print(enc.decrypt(cypher, enc.get_keys()))
