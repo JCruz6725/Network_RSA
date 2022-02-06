@@ -37,30 +37,8 @@ def string_to_int_array(string_text):
 
 
 def int_array_to_srting(int_array):
-
-
     string = ''
     for char in int_array:   
         string += (chr(char))
 
     return string
-
-
-
-
-#a = [10,20,30,40]
-
-#d = data_to_json(a)
-
-#print (d)
-
-
-
-#def int
-
-
-
-
-#q = format_data_to_int_array('13,21,51,321,')
-
-#print (q[0])

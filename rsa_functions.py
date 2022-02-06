@@ -7,23 +7,23 @@ class RSA():
     def __init__ (self, upper = 2**8, lower = 0):
         self.__lower = lower
         self.__upper = upper
-        self.keys = self.get_keys(self.__lower, self.__upper)
+        self.keys = self.__set_keys(self.__lower, self.__upper)
         #self.__p
         #self.__q
         #self.__n
         #self.__tot
     
     
-    def random_int(self, lower_limit, upper_limit):
+    def __random_int(self, lower_limit, upper_limit):
         r = random.randint(lower_limit, upper_limit)
         return r
 
-    def mod_exponentiation(self, char_val, key, tot_n):
+    def __mod_exponentiation(self, char_val, key, tot_n):
         remainder = (char_val**key)%(tot_n)
         return remainder
 
 
-    def check_if_prime(self, n):
+    def __check_if_prime(self, n):
         if (n <= 1):
             return False
         else:
@@ -33,48 +33,48 @@ class RSA():
             return True
 
 
-    def get_primes_in_range (self, x, y):
+    def __get_primes_in_range (self, x, y):
         primes = []
         for i in range (x, y):
-            if (self.check_if_prime(i)):
+            if (self.__check_if_prime(i)):
                 primes.append(i)
         return primes
 
         
-    def get_p_and_q(self, lower_limit, upper_limit):
+    def __get_p_and_q(self, lower_limit, upper_limit):
         """ return a tuple of p and q which are both prime numbers """
-        primes = self.get_primes_in_range(lower_limit, upper_limit)
+        primes = self.__get_primes_in_range(lower_limit, upper_limit)
 
         while True:
-            p = self.random_int(0, len(primes)-1)
-            q = self.random_int(0, len(primes)-1)
+            p = self.__random_int(0, len(primes)-1)
+            q = self.__random_int(0, len(primes)-1)
             if (p != q):
                 break
         
         return primes[p], primes [q]
 
 
-    def totient(self, p, q):
+    def __totient(self, p, q):
         t = (p-1)*(q-1)
         return t
 
 
-    def multi_mod_inverse(self, d, p , q):
+    def __multi_mod_inverse(self, d, p , q):
         #1 = ( private * public ) % totient(p, q)
 
-        for e in range(1, self.totient(p, q)):
-            if ( ((d * e) % self.totient (p, q)) == 1):
+        for e in range(1, self.__totient(p, q)):
+            if ( ((d * e) % self.__totient (p, q)) == 1):
                 return e
         return -1
 
 
-    def is_relative_prime(self, a, b): ##### need to fix this and add it to the get keys function #####
+    def __is_relative_prime(self, a, b): ##### need to fix this and add it to the get keys function #####
         from math import gcd
         if (gcd(a,b) == 1):
             return True
 
         
-    def get_keys(self, lower, upper):
+    def __set_keys(self, lower, upper):
         
         upper_bound = upper
         lower_bound = lower
@@ -82,11 +82,11 @@ class RSA():
 
         while (private_key == -1):
             
-            public_key = self.random_int(lower_bound, upper_bound)
-            p , q = self.get_p_and_q(lower_bound, upper_bound)
+            public_key = self.__random_int(lower_bound, upper_bound)
+            p , q = self.__get_p_and_q(lower_bound, upper_bound)
             n = p*q
-            tot_n = self.totient(p, q)
-            private_key = self.multi_mod_inverse(public_key, p, q)
+            tot_n = self.__totient(p, q)
+            private_key = self.__multi_mod_inverse(public_key, p, q)
 
 
         keys = {'public_key': public_key,
@@ -107,7 +107,7 @@ class RSA():
         cypher_text_int = []
 
         for i in plain_text_int:
-            cypher_text_int.append(self.mod_exponentiation(i, public_key, n))
+            cypher_text_int.append(self.__mod_exponentiation(i, public_key, n))
 
         cypher = {'data' : cypher_text_int}
         
@@ -128,16 +128,23 @@ class RSA():
 
         for i in cypher_text_json['data']:
         
-            plain_int_array.append(self.mod_exponentiation(i, private_key, n))
+            plain_int_array.append(self.__mod_exponentiation(i, private_key, n))
 
-        return plain_int_array
+        plain_text_string = self.__int_array_to_srting(plain_int_array)
+        return plain_text_string
+        
 
 
     #################################
     # String manipulation functions #
     #################################
+    def __int_array_to_srting(self, int_array):
+        string = ''
+        for char in int_array:   
+            string += (chr(char))
 
-
+        return string
+    '''
     def format_data_to_int_array(data):
         temp = ''
         int_array = []
@@ -171,13 +178,8 @@ class RSA():
 
         return int_array
 
+    '''
 
-    def int_array_to_srting(self, int_array):
-        string = ''
-        for char in int_array:   
-            string += (chr(char))
-
-        return string
 
     
 
@@ -195,4 +197,4 @@ print (cypher)
 
 
 
-print(enc.int_array_to_srting(enc.decrypt(cypher, enc.keys)))
+print(enc.decrypt(cypher, enc.keys))
