@@ -1,4 +1,7 @@
 # Network_RSA
+
+BROKEN NEED TO FIX: RSA CLASS
+
 This project shows what I learned in my studies; that is how to use a RSA encryption on a network, 
 with a server client architecuter, to encrypt a message from the client to the server. 
 The program also has a user login function. the login funtion works of  the Leslie Lamport hashing function. 
