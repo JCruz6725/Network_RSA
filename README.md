@@ -1,6 +1,6 @@
 # Network_RSA
 
-BROKEN NEED TO FIX: RSA CLASS
+note: need to have upper bound set to > 2^8. A low number of bits will conflict with how letters and puntuation are valued and mod exponentialted. 
 
 This project shows what I learned in my studies; that is how to use a RSA encryption on a network, 
 with a server client architecuter, to encrypt a message from the client to the server. 
