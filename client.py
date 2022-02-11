@@ -7,14 +7,22 @@ Created on Sun Dec 26 05:55:12 2021
 
 import socket
 from my_hasher import md5_hasher
-from rsa_functions import *
+from My_RSA import *
 from string_functions import *
 import json
 
 
-keys = get_keys(upper = 256, lower = 0)
-client_public_key = {'public_key':keys['public_key'], 'n':keys['n']}
-client_private_key =  {'private_key':keys['private_key'], 'n':keys['n']}
+#keys = get_keys(upper = 256, lower = 0)
+
+rsa = RSA()
+my_keys = rsa.get_keys()
+
+
+client_public_key = {'public_key':my_keys['public_key'], 'n':my_keys['n']}
+#client_private_key =  {'private_key':my_keys['private_key'], 'n':my_keys['n']}
+
+
+
 
 HOST = '127.0.0.1'
 PORT = 27000
@@ -23,7 +31,6 @@ PORT = 27000
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
-
 s.send(client_public_key.encode())
 
 #data = s.recv(256).decode()
@@ -49,7 +56,7 @@ def client_chat_state_rsa():
         if (data == 'quit'):
             break
 
-        cypher = {"data":encrypt(data, server_keys)}
+        cypher = rsa.encrypt(data, rsa.get_keys())     
         data = json.dumps(cypher)
         #print (data)
         s.send(data.encode())

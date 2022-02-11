@@ -4,7 +4,7 @@ import json
 #random.seed(20)
 
 class RSA():
-    def __init__ (self, upper = 2**256, lower = 0):
+    def __init__ (self, upper = 2**8, lower = 0):
         self.__lower = lower
         self.__upper = upper
         self.__keys = self.__set_keys(self.__lower, self.__upper)
@@ -94,12 +94,18 @@ class RSA():
             n = p*q
             tot_n = self.__totient(p, q)
             private_key = self.__multi_mod_inverse(public_key, p, q)
+            
+            if (self.__is_relative_prime(public_key, private_key) ==  False):
+                print('not relative prime')
+            
 
 
         keys = {'public_key': public_key,
                 'private_key': private_key,
-                #'totient_n': tot_n,
-                'n': n
+                'totient_n': tot_n,
+                'n': n,
+                'p': p,
+                'q':q, 
                 }
 
         return keys
@@ -114,10 +120,9 @@ class RSA():
     #############################
 
 
-    def encrypt(self, plain_text):
-        public_key = self.__keys['private_key']
-        #tot_n = keys['totient_n']
-        n = self.__keys['n']
+    def encrypt(self, plain_text, keys):
+        public_key = keys['private_key']
+        n = keys['n']
 
         plain_text_int = string_to_int_array(plain_text)
         cypher_text_int = []
@@ -134,7 +139,6 @@ class RSA():
     def decrypt(self, cypher_text_json, keys):
 
         private_key = keys['public_key']
-        #tot_n = keys['totient_n']
         n = keys['n']
 
         plain_int_array = []
@@ -142,9 +146,10 @@ class RSA():
         #plain_text_int = string_to_int_array(plain_text)
         #cypher_text_int = []
 
-        for i in cypher_text_json['data']:
-        
+        for i in cypher_text_json['data']:        
             plain_int_array.append(self.__mod_exponentiation(i, private_key, n))
+
+        #print(plain_int_array)
 
         plain_text_string = self.__int_array_to_srting(plain_int_array)
         return plain_text_string
@@ -158,15 +163,8 @@ class RSA():
         string = ''
         for char in int_array:   
             string += (chr(char))
-
+        
         return string
 
 
 
-#enc = RSA()
-#print (enc.get_keys())
-#string_t = 'hello'
-#cypher = enc.encrypt(string_t)
-#print (cypher)
-
-#print(enc.decrypt(cypher, enc.get_keys()))
