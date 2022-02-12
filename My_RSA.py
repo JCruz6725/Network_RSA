@@ -4,7 +4,7 @@ import json
 #random.seed(20)
 
 class RSA():
-    def __init__ (self, upper = 2**8, lower = 0):
+    def __init__ (self, upper = 2**8, lower = 2**5):
         self.__lower = lower
         self.__upper = upper
         self.__keys = self.__set_keys(self.__lower, self.__upper)
@@ -51,19 +51,20 @@ class RSA():
             if (p != q):
                 break
         
-        return primes[p], primes [q]
+        return primes[p], primes[q]
 
 
-    def __totient(self, p, q):
+    def __totient(self, p, q):  
         t = (p-1)*(q-1)
         return t
 
 
     def __multi_mod_inverse(self, d, p , q):
-        #1 = ( private * public ) % totient(p, q)
-
-        for e in range(1, self.__totient(p, q)):
-            if ( ((d * e) % self.__totient (p, q)) == 1):
+        #'''1 = ( private * public ) % totient(p, q)'''
+        tot = self.__totient(p, q)
+       
+        for e in range(1, tot):
+            if ( ((d * e) % tot) == 1):
                 return e
         return -1
 
@@ -92,7 +93,7 @@ class RSA():
             public_key = self.__random_int(lower_bound, upper_bound)
             p , q = self.__get_p_and_q(lower_bound, upper_bound)
             n = p*q
-            tot_n = self.__totient(p, q)
+            #tot_n = self.__totient(p, q)
             private_key = self.__multi_mod_inverse(public_key, p, q)
             
             if (self.__is_relative_prime(public_key, private_key) ==  False):
@@ -102,10 +103,10 @@ class RSA():
 
         keys = {'public_key': public_key,
                 'private_key': private_key,
-                'totient_n': tot_n,
+                #'totient_n': tot_n,
                 'n': n,
-                'p': p,
-                'q':q, 
+                #'p': p,
+                #'q':q, 
                 }
 
         return keys

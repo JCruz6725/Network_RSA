@@ -11,27 +11,26 @@ from My_RSA import *
 from string_functions import *
 import json
 
-
-#keys = get_keys(upper = 256, lower = 0)
-
 rsa = RSA()
 my_keys = rsa.get_keys()
 
 
-client_public_key = {'public_key':my_keys['public_key'], 'n':my_keys['n']}
-#client_private_key =  {'private_key':my_keys['private_key'], 'n':my_keys['n']}
+client_public_key = {'public_key': my_keys['public_key'], 'n':my_keys['n']}
+client_private_key =  {'private_key': my_keys['private_key'], 'n':my_keys['n']}
 
 
 
 
 HOST = '127.0.0.1'
-PORT = 27000
+PORT = 5999
 
-#print ('*** CLIENT ***')
+print ('*** CLIENT ***')
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 s.send(client_public_key.encode())
+
+
 
 #data = s.recv(256).decode()
 
