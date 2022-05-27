@@ -15,23 +15,23 @@ class RSA():
         self.q = self.get_big_prime()        
         self.n = self.p * self.q
         self.totient_var = self.__totient(self.p, self.q)
-     
+
+        #generate e
         self.e = -1
-        print ("getting E")
-        
-        while (self.e == -1 or self.e > self.totient_var or
-                gcd(self.e, self.totient_var) != 1):
+        while ( (self.e == -1) or (self.e > self.totient_var) or (gcd(self.e, self.totient_var) != 1) ):
             self.e = self.get_big_prime()
-         
-        print (f"{gcd(self.e, self.totient_var)}"  )
-        
-     
-     
-     
+
+        #generate d
+        self.d = -1
+        while ((self.d == -1) or (gcd(self.e, self.d) != 1 )  ):
+            self.d = self.get_big_prime()
+
+
+
     def get_big_prime(self, test_itteration = 500):
         number = -1
         while (number == -1):
-            number = self.__random_odd_int(2**1023, 2**1024)
+            number = self.__random_odd_int(2**3, 2**10)
             #if (self.square_root_test(number)):
             if (self.miller_rabin_test(number, test_itteration)):
                 prime = number
@@ -40,8 +40,7 @@ class RSA():
                 number = -1
                 
     
-    #################################
-
+    #######################
     def square_root_test(self, large_prime):
         
         for prime in self.primes:
@@ -50,7 +49,6 @@ class RSA():
         return True
 
     ########################
-    
     def miller_rabin_test(self, n, k):
         #Source ----> https://gist.github.com/Ayrx/5884790
         # Implementation uses the Miller-Rabin Primality Test
@@ -82,7 +80,6 @@ class RSA():
             else:
                 return False
         return True
-
     ########################
     
     
@@ -99,14 +96,8 @@ class RSA():
                 tmp = ((size-1) - i)//val 
                 sieve[i+val::val] = [0]*tmp
         return [2] + [i*2+1 for i, v in enumerate(sieve) if v and i>0]
-    
-    
-        
-    
-    def __random_int(self, lower_limit, upper_limit):
-        r = random.randint(lower_limit, upper_limit)
-        return r
-        
+
+
     def __random_odd_int(self, lower_limit, upper_limit):
         r_number = 2
         while (r_number%2 == 0):
@@ -123,59 +114,15 @@ class RSA():
         return remainder
 
 
-    def __check_if_prime(self, n):
-        #Remove this
-        if (n <= 1):
-            return False
-        else:
-            for i in range(2, n):
-                if (n % i == 0):
-                    return False
-            return True
-
-
-    def __get_primes_in_range (self, x, y):
-        #Remove this
-        primes = []
-        for i in range (x, y):
-            if (self.__check_if_prime(i)):
-                primes.append(i)
-        return primes
-       
-
-        
-
-        
-    def __get_p_and_q(self, lower_limit, upper_limit):
-        """ return a tuple of p and q which are both prime numbers """
-        primes = self.__get_primes_in_range(lower_limit, upper_limit)
-
-        while True:
-            p = self.__random_int(0, len(primes)-1)
-            q = self.__random_int(0, len(primes)-1)
-            if (p != q):
-                break
-        
-        return primes[p], primes[q]
-
 
     def __totient(self, p, q):  
         t = (p-1)*(q-1)
         return t
 
 
-    def __multi_mod_inverse(self, d, p , q):
-        #'''1 = ( private * public ) % totient(p, q)'''
-        tot = self.__totient(p, q)
-       
-        for e in range(1, tot):
-            if ( ((d * e) % tot) == 1):
-                return e
-        return -1
 
 
     def __is_relative_prime(self, a, b): ##### need to fix this and add it to the get keys function #####
-        from math import gcd
         if (gcd(a,b) == 1):
             return True
         
@@ -227,6 +174,9 @@ class RSA():
 
 
     def encrypt(self, plain_text, keys):
+        # need to rewrite
+
+
         public_key = keys['private_key']
         n = keys['n']
 
@@ -243,6 +193,7 @@ class RSA():
         
 
     def decrypt(self, cypher_text_json, keys):
+        # need to rewrite
 
         private_key = keys['public_key']
         n = keys['n']

@@ -3,6 +3,13 @@ import json
 
 
 
+print ('#' * 80)
+
+print ('\n' , ' '*30, 'testing \n')
+
+print ('#' * 80)
+print ('\n\n')
+
 ''' 
 #test (1)
 print ('********************')
@@ -26,10 +33,15 @@ for i in range (0, 20):
 print ('********************')
 '''
 
-IT = 500
+
+
+
+print (' ')
 
 a = time.time()
 r = RSA()
+
+print (' ')
 print(time.time() - a)
 
 print()
