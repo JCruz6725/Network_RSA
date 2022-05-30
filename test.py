@@ -38,22 +38,23 @@ print ('********************')
 
 random.seed()
 
-for _ in range(2):
+for _ in range(1):
 
     
     #print (f'q: {r.p}, p: {r.q}, n: {r.n} \n tot: {r.totient_var}  e: {r.e}, d: {r.d}')
     
 
     
-    text = "hello john"
-    print (text)
+    #text = "hello john"
+    #print (text)
     try:
+        print ('make obj')
         r = RSA()
         print (f'q: {r.p}, p: {r.q}, n: {r.n} \n tot: {r.totient_var}  e: {r.e}, d: {r.d}')
-        print (r.count)
-        cy = r.encrypt(text)
-        print(cy)
-        print(r.decrypt(cy))
+        #print (r.count)
+        #cy = r.encrypt(text)
+        #print(cy)
+        #print(r.decrypt(cy))
 
 
     except Exception as e:

@@ -11,45 +11,47 @@ class RSA():
     def __init__ (self):
     
         self.primes = self.sieve_for_primes_to(2**16)      
-        self.p = self.get_big_prime(p_q='y')
-        self.q = self.get_big_prime(p_q='y')        
-        self.n = self.p * self.q
-        self.totient_var = self.__totient(self.p, self.q)
 
         #generate e
-        self.e = -1
-        while ( (self.e == -1)  or (gcd(self.e, self.totient_var) != 1) ):
+        self.e = 65537
+        print('get p, q')
+        while ( 1 ):
             #or (self.e > self.totient_var)
-            self.e = self.get_big_prime()
 
-        self.count = 0
+            self.p = self.get_big_prime(p_q='y')
+            self.q = self.get_big_prime(p_q='y')        
+            self.n = self.p * self.q
+            self.totient_var = self.__totient(self.p, self.q)
+
+            if (gcd(self.e, self.totient_var) == 1):
+                break
+
+        print (self.e, self.p, self.q, self.n, self.totient_var)
+
+
+
+
+
         #generate d
-        self.d = -1
-        while ((self.d == -1)  or (self.d*self.e % self.totient_var != 1)   ):
-            #or (gcd(self.e, self.d) != 1 )
+        print ('get d')
+
+        while ( 1 ):
+            #print ('!')
             self.d = self.get_big_prime()
-            self.count += 1
+            print (self.d*self.e % self.totient_var)
+            if (self.d*self.e % self.totient_var == 1) :
+                break
 
-            if (self.count == 500):
-                self.count = 0
-                #print ("regen")
-                self.p = self.get_big_prime(p_q='y')
-                self.q = self.get_big_prime(p_q='y')        
-                self.n = self.p * self.q
-                self.totient_var = self.__totient(self.p, self.q)
 
-                self.e = -1
-                while ( (self.e == -1)  or (gcd(self.e, self.totient_var) != 1) ):
-                    #or (self.e > self.totient_var)
-                    self.e = self.get_big_prime()
+        print ('done')
 
 
 
     def get_big_prime(self, p_q='n'):
         if (p_q == 'y'):
-            x, y = 2**7, 2**12
-        else:
-            x, y = 2**7, 2**12
+            x, y = 2**2, 2**75
+        else:   
+            x, y = 2**200, 2**256
 
         number = -1
         while (number == -1):
