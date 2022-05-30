@@ -11,35 +11,57 @@ class RSA():
     def __init__ (self):
     
         self.primes = self.sieve_for_primes_to(2**16)      
-        self.p = self.get_big_prime()
-        self.q = self.get_big_prime()        
+        self.p = self.get_big_prime(p_q='y')
+        self.q = self.get_big_prime(p_q='y')        
         self.n = self.p * self.q
         self.totient_var = self.__totient(self.p, self.q)
 
         #generate e
         self.e = -1
-        while ( (self.e == -1) or (self.e > self.totient_var) or (gcd(self.e, self.totient_var) != 1) ):
+        while ( (self.e == -1)  or (gcd(self.e, self.totient_var) != 1) ):
+            #or (self.e > self.totient_var)
             self.e = self.get_big_prime()
 
+        self.count = 0
         #generate d
         self.d = -1
-        while ((self.d == -1) or (gcd(self.e, self.d) != 1 )  ):
+        while ((self.d == -1)  or (self.d*self.e % self.totient_var != 1)   ):
+            #or (gcd(self.e, self.d) != 1 )
             self.d = self.get_big_prime()
+            self.count += 1
+
+            if (self.count == 500):
+                self.count = 0
+                #print ("regen")
+                self.p = self.get_big_prime(p_q='y')
+                self.q = self.get_big_prime(p_q='y')        
+                self.n = self.p * self.q
+                self.totient_var = self.__totient(self.p, self.q)
+
+                self.e = -1
+                while ( (self.e == -1)  or (gcd(self.e, self.totient_var) != 1) ):
+                    #or (self.e > self.totient_var)
+                    self.e = self.get_big_prime()
 
 
 
-    def get_big_prime(self, test_itteration = 500):
+    def get_big_prime(self, test_itteration = 40, p_q='n'):
+        if (p_q == 'y'):
+            x, y = 2**7, 2**12
+        else:
+            x, y = 2**7, 2**12
+
         number = -1
         while (number == -1):
-            number = self.__random_odd_int(2**3, 2**10)
+            number = self.__random_odd_int(x, y)
             #if (self.square_root_test(number)):
             if (self.miller_rabin_test(number, test_itteration)):
                 prime = number
                 return prime
             else:
                 number = -1
-                
     
+
     #######################
     def square_root_test(self, large_prime):
         
@@ -80,6 +102,9 @@ class RSA():
             else:
                 return False
         return True
+
+
+    
     ########################
     
     
@@ -102,7 +127,7 @@ class RSA():
         r_number = 2
         while (r_number%2 == 0):
             r_number = random.randint(lower_limit, upper_limit)
-        return r_number    
+        return r_number
         
 
     #################################################
@@ -132,8 +157,9 @@ class RSA():
     ##########################
     # get/set keys functions #
     ##########################     
-        
-        
+
+
+
     def __set_keys(self, lower, upper):
         
         upper_bound = upper
@@ -173,18 +199,23 @@ class RSA():
     #############################
 
 
-    def encrypt(self, plain_text, keys):
+    def encrypt(self, plain_text, keys=0):
         # need to rewrite
+        if (keys == 0):
+            keys = {'privite_key': self.d, 'n':self.n }
 
 
-        public_key = keys['private_key']
-        n = keys['n']
+
+        
+
+        privite_key = self.d
+        n = self.n
 
         plain_text_int = string_to_int_array(plain_text)
         cypher_text_int = []
 
         for i in plain_text_int:
-            cypher_text_int.append(self.__mod_exponentiation(i, public_key, n))
+            cypher_text_int.append(self.__mod_exponentiation(i, privite_key, n))
 
         cypher = {'data' : cypher_text_int}
         
@@ -192,11 +223,15 @@ class RSA():
         #return cypher_text_int
         
 
-    def decrypt(self, cypher_text_json, keys):
+    def decrypt(self, cypher_text_json, keys=0):
+        if (keys == 0):
+            keys = {'public_key': self.e, 'n':self.n }
+
+
         # need to rewrite
 
-        private_key = keys['public_key']
-        n = keys['n']
+        public_key = self.e
+        n = self.n
 
         plain_int_array = []
 
@@ -204,7 +239,7 @@ class RSA():
         #cypher_text_int = []
 
         for i in cypher_text_json['data']:        
-            plain_int_array.append(self.__mod_exponentiation(i, private_key, n))
+            plain_int_array.append(self.__mod_exponentiation(i, public_key, n))
 
         #print(plain_int_array)
 

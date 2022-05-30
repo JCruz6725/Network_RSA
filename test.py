@@ -1,14 +1,17 @@
 from My_RSA import *
 import json
-
+import random
+from math import gcd
 
 
 print ('#' * 80)
 
-print ('\n' , ' '*30, 'testing \n')
+print ('\n' , ' '*30, 'TESTING \n')
 
 print ('#' * 80)
 print ('\n\n')
+
+
 
 ''' 
 #test (1)
@@ -33,19 +36,28 @@ for i in range (0, 20):
 print ('********************')
 '''
 
+random.seed()
+
+for _ in range(2):
+
+    
+    #print (f'q: {r.p}, p: {r.q}, n: {r.n} \n tot: {r.totient_var}  e: {r.e}, d: {r.d}')
+    
+
+    
+    text = "hello john"
+    print (text)
+    try:
+        r = RSA()
+        print (f'q: {r.p}, p: {r.q}, n: {r.n} \n tot: {r.totient_var}  e: {r.e}, d: {r.d}')
+        print (r.count)
+        cy = r.encrypt(text)
+        print(cy)
+        print(r.decrypt(cy))
 
 
-
-print (' ')
-
-a = time.time()
-r = RSA()
-
-print (' ')
-print(time.time() - a)
-
-print()
-
-print(f"{r.totient_var} \n \n ")
-
- 
+    except Exception as e:
+        pass
+        #print (e)
+    
+    print ('\n\n')
