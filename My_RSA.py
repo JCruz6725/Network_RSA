@@ -45,7 +45,7 @@ class RSA():
 
 
 
-    def get_big_prime(self, test_itteration = 40, p_q='n'):
+    def get_big_prime(self, p_q='n'):
         if (p_q == 'y'):
             x, y = 2**7, 2**12
         else:
@@ -55,7 +55,7 @@ class RSA():
         while (number == -1):
             number = self.__random_odd_int(x, y)
             #if (self.square_root_test(number)):
-            if (self.miller_rabin_test(number, test_itteration)):
+            if (self.miller_rabin_test(number)):
                 prime = number
                 return prime
             else:
@@ -71,7 +71,7 @@ class RSA():
         return True
 
     ########################
-    def miller_rabin_test(self, n, k):
+    def miller_rabin_test(self, n, k=40):
         #Source ----> https://gist.github.com/Ayrx/5884790
         # Implementation uses the Miller-Rabin Primality Test
         # The optimal number of rounds for this test is 40
